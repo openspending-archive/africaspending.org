@@ -8,19 +8,26 @@ OpenSpending.DailyBread = function (elem, options) {
   this.$e = $(elem)
   this.$e.data('wdmmg.dailybread', this)
 
-  this.options = _.extend();
+  this.options = _.extend({
+    minIncome: 10000,
+    maxIncome: 200000,
+    defaultIncome: 22000,
+    currency: 'GBP'
+  }, options);
+
+  console.log(this.options);
 
   this.tiers = []
   this.areas = []
   this.iconLookup = function (name) { return undefined; };
 
   this.init = function () {
-    this.setSalary(22000) // default starting salary
+    this.setSalary(self.options.defaultIncome); // default starting salary
 
     this.$e.find('.wdmmg-slider').slider({
       value: this.salaryVal,
-      min: 10000,
-      max: 200000,
+      min: self.options.minIncome,
+      max: self.options.maxIncome,
       step: 10,
       animate: true,
       slide: function () { self.sliderUpdated.apply(self, arguments) }
@@ -100,8 +107,8 @@ OpenSpending.DailyBread = function (elem, options) {
   }
 
   this.drawTotals = function () {
-    $('#db-salary p').text(OpenSpending.Utils.formatAmountWithCommas(self.salaryVal, 0))
-    $('#db-tax p').text(OpenSpending.Utils.formatAmountWithCommas(self.taxVal, 0))
+    $('#db-salary p').text(OpenSpending.Utils.formatAmountWithCommas(self.salaryVal, 0, self.options.currency))
+    $('#db-tax p').text(OpenSpending.Utils.formatAmountWithCommas(self.taxVal, 0, self.options.currency))
   }
 
   this.drawTier = function (tierId) {

@@ -32,7 +32,13 @@
     <script>
     (function ($) {
       $(function () {
-        var db = new OpenSpending.DailyBread($('#dailybread'));
+        var db = new OpenSpending.DailyBread($('#dailybread'),
+          {
+            minIncome: 70000,
+            maxIncome: 500000,
+            defaultIncome:  92200,
+            currency: 'ZAR'
+          });
         new OpenSpending.Aggregator({
               apiUrl: 'http://openspending.org/api',
               //localApiCache: 'aggregate.json',
