@@ -91,22 +91,24 @@ OpenSpending.DailyBread = function (elem, options) {
 
   this.setSalary = function (salary) {
     self.salaryVal = salary;
-    $.ajax({
-      url: self.options.taxmanApi,
-      data: {income: salary},
-      cache: true,
-      dataType: 'jsonp',
-      jsonpCallback: 'taxman_' + salary,
-      success: function(data) {
-        self.taxVal = data.calculation.total;
-        if (self.data) {
-          self.sliderUpdate = true;
-          self.draw();
-          self.sliderUpdate = false;
+    window.clearTimeout(window.fetchTax);
+    window.fetchTax = window.setTimeout(function() {
+      $.ajax({
+        url: self.options.taxmanApi,
+        data: {income: salary},
+        cache: true,
+        dataType: 'jsonp',
+        jsonpCallback: 'taxman_' + salary,
+        success: function(data) {
+          self.taxVal = data.calculation.total;
+          if (self.data) {
+            self.sliderUpdate = true;
+            self.draw();
+            self.sliderUpdate = false;
+          }
         }
-      }
-    });
-    
+      });  
+    }, 200);
   };
 
   this.draw = function () {
